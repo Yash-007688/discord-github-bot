@@ -1,12 +1,16 @@
 # Discord GitHub Bot
 
-A Discord bot that posts GitHub webhook events into your Discord channel and provides slash commands for GitHub user/repo/activity data.
+A Discord bot that posts GitHub webhook events into your Discord channel and provides advanced slash commands for your personal GitHub stats.
 
 ## Features
 
-- `/github-user username:<name>` - profile stats, followers, repos, join date
-- `/github-repo owner:<owner> repo:<repo>` - stars, forks, issues, language, visibility
-- `/github-activity username:<name>` - latest 5 public events
+- Locked mode: bot serves only your configured GitHub account (`GITHUB_USERNAME`)
+- `/github-me` - profile stats, followers, repos, join date
+- `/github-summary` - advanced totals across your public repos
+- `/github-repo repo:<name>` - detailed stats for your repository
+- `/github-activity [limit]` - latest public events from your account
+- `/github-top-repos [limit]` - top repos by stars
+- `/github-languages` - language distribution in your repos
 - GitHub webhook endpoint: `POST /github-webhook`
   - Supports detailed embeds for `push`, `pull_request`, and `issues`
   - Other events are posted in a generic format
@@ -26,6 +30,7 @@ Copy `.env.example` to `.env` and fill values:
 - `DISCORD_GUILD_ID`: Your Discord server (guild) ID
 - `DISCORD_CHANNEL_ID`: Channel ID where webhook updates will be sent
 - `GITHUB_TOKEN`: Optional but recommended for higher API limits
+- `GITHUB_USERNAME`: Your GitHub username (bot is restricted to this account)
 - `WEBHOOK_PORT`: Local webhook server port (default `3000`)
 
 ## 3) Register slash commands
@@ -64,6 +69,5 @@ Then use the generated public URL in GitHub webhook settings.
 
 ## Notes
 
-- The bot uses only public GitHub data for slash commands.
-- Private repo events in webhooks still send payload metadata if your webhook has access.
+- Commands now return data only for the configured `GITHUB_USERNAME`.
 - For production, deploy on a stable host and protect webhook endpoint with a secret/signature check.

@@ -11,26 +11,40 @@ if (!DISCORD_BOT_TOKEN || !DISCORD_CLIENT_ID || !DISCORD_GUILD_ID) {
 
 const commands = [
   new SlashCommandBuilder()
-    .setName("github-user")
-    .setDescription("Show GitHub user profile details")
-    .addStringOption((option) =>
-      option.setName("username").setDescription("GitHub username").setRequired(true)
-    ),
+    .setName("github-me")
+    .setDescription("Show your configured GitHub profile details"),
+  new SlashCommandBuilder()
+    .setName("github-summary")
+    .setDescription("Show advanced total stats across your GitHub repos"),
   new SlashCommandBuilder()
     .setName("github-repo")
-    .setDescription("Show details about a GitHub repository")
-    .addStringOption((option) =>
-      option.setName("owner").setDescription("Repository owner/org").setRequired(true)
-    )
+    .setDescription("Show details about one of your GitHub repositories")
     .addStringOption((option) =>
       option.setName("repo").setDescription("Repository name").setRequired(true)
     ),
   new SlashCommandBuilder()
     .setName("github-activity")
-    .setDescription("Show recent public activity for a GitHub user")
-    .addStringOption((option) =>
-      option.setName("username").setDescription("GitHub username").setRequired(true)
+    .setDescription("Show your recent public GitHub activity")
+    .addIntegerOption((option) =>
+      option
+        .setName("limit")
+        .setDescription("Number of events to show (1-10)")
+        .setMinValue(1)
+        .setMaxValue(10)
     ),
+  new SlashCommandBuilder()
+    .setName("github-top-repos")
+    .setDescription("Show your top repositories by stars")
+    .addIntegerOption((option) =>
+      option
+        .setName("limit")
+        .setDescription("How many repositories to list (1-10)")
+        .setMinValue(1)
+        .setMaxValue(10)
+    ),
+  new SlashCommandBuilder()
+    .setName("github-languages")
+    .setDescription("Show language distribution across your public repos"),
 ].map((c) => c.toJSON());
 
 const rest = new REST({ version: "10" }).setToken(DISCORD_BOT_TOKEN);

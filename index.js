@@ -16,11 +16,16 @@ const {
   DISCORD_BOT_TOKEN,
   DISCORD_CHANNEL_ID,
   GITHUB_TOKEN,
+  GITHUB_USERNAME,
   WEBHOOK_PORT = 3000,
 } = process.env;
 
 if (!DISCORD_BOT_TOKEN) {
   throw new Error("Missing DISCORD_BOT_TOKEN in .env");
+}
+
+if (!GITHUB_USERNAME) {
+  throw new Error("Missing GITHUB_USERNAME in .env");
 }
 
 const githubApi = axios.create({
@@ -34,6 +39,23 @@ const githubApi = axios.create({
 function formatDate(dateString) {
   const d = new Date(dateString);
   return d.toLocaleString();
+}
+
+function usernameWithOwner(owner) {
+  return String(owner || "").toLowerCase() === String(GITHUB_USERNAME).toLowerCase();
+}
+
+async function getMyPublicRepos(limit = 100) {
+  const safeLimit = Math.max(1, Math.min(limit, 100));
+  const { data } = await githubApi.get(`/users/${GITHUB_USERNAME}/repos`, {
+    params: {
+      per_page: safeLimit,
+      sort: "updated",
+      direction: "desc",
+      type: "owner",
+    },
+  });
+  return data;
 }
 
 function getPayload(req) {
@@ -51,14 +73,13 @@ async function handleCommand(interaction) {
   const { commandName } = interaction;
 
   try {
-    if (commandName === "github-user") {
-      const username = interaction.options.getString("username", true);
+    if (commandName === "github-me") {
       await interaction.deferReply();
-      const { data } = await githubApi.get(`/users/${username}`);
+      const { data } = await githubApi.get(`/users/${GITHUB_USERNAME}`);
 
       const embed = new EmbedBuilder()
         .setColor(0x24292f)
-        .setTitle(`${data.login} (GitHub User)`)
+        .setTitle(`${data.login} (Your GitHub Profile)`)
         .setURL(data.html_url)
         .setThumbnail(data.avatar_url)
         .addFields(
@@ -78,11 +99,53 @@ async function handleCommand(interaction) {
       await interaction.editReply({ embeds: [embed] });
     }
 
+    if (commandName === "github-summary") {
+      await interaction.deferReply();
+      const [profileResponse, repos] = await Promise.all([
+        githubApi.get(`/users/${GITHUB_USERNAME}`),
+        getMyPublicRepos(100),
+      ]);
+      const profile = profileResponse.data;
+      const totals = repos.reduce(
+        (acc, repo) => {
+          acc.stars += repo.stargazers_count || 0;
+          acc.forks += repo.forks_count || 0;
+          acc.watchers += repo.watchers_count || 0;
+          acc.openIssues += repo.open_issues_count || 0;
+          return acc;
+        },
+        { stars: 0, forks: 0, watchers: 0, openIssues: 0 }
+      );
+
+      const embed = new EmbedBuilder()
+        .setColor(0x1f6feb)
+        .setTitle(`${GITHUB_USERNAME} - Advanced GitHub Summary`)
+        .setURL(`https://github.com/${GITHUB_USERNAME}`)
+        .addFields(
+          { name: "Followers", value: String(profile.followers), inline: true },
+          { name: "Following", value: String(profile.following), inline: true },
+          { name: "Public Repos", value: String(profile.public_repos), inline: true },
+          { name: "Total Stars", value: String(totals.stars), inline: true },
+          { name: "Total Forks", value: String(totals.forks), inline: true },
+          { name: "Open Issues", value: String(totals.openIssues), inline: true },
+          { name: "Watchers", value: String(totals.watchers), inline: true }
+        )
+        .setFooter({ text: `Computed from your latest ${repos.length} public repo(s)` });
+
+      await interaction.editReply({ embeds: [embed] });
+    }
+
     if (commandName === "github-repo") {
-      const owner = interaction.options.getString("owner", true);
       const repo = interaction.options.getString("repo", true);
       await interaction.deferReply();
-      const { data } = await githubApi.get(`/repos/${owner}/${repo}`);
+      const { data } = await githubApi.get(`/repos/${GITHUB_USERNAME}/${repo}`);
+
+      if (!usernameWithOwner(data.owner?.login)) {
+        await interaction.editReply(
+          "Access denied: this bot is locked to your GitHub account only."
+        );
+        return;
+      }
 
       const embed = new EmbedBuilder()
         .setColor(0x0969da)
@@ -107,13 +170,13 @@ async function handleCommand(interaction) {
     }
 
     if (commandName === "github-activity") {
-      const username = interaction.options.getString("username", true);
+      const limit = interaction.options.getInteger("limit") || 5;
       await interaction.deferReply();
-      const { data } = await githubApi.get(`/users/${username}/events/public`);
-      const latest = data.slice(0, 5);
+      const { data } = await githubApi.get(`/users/${GITHUB_USERNAME}/events/public`);
+      const latest = data.slice(0, Math.min(Math.max(limit, 1), 10));
 
       if (latest.length === 0) {
-        await interaction.editReply(`No recent public activity found for ${username}.`);
+        await interaction.editReply(`No recent public activity found for ${GITHUB_USERNAME}.`);
         return;
       }
 
@@ -126,9 +189,60 @@ async function handleCommand(interaction) {
 
       const embed = new EmbedBuilder()
         .setColor(0x8250df)
-        .setTitle(`Recent GitHub Activity: ${username}`)
+        .setTitle(`Recent GitHub Activity: ${GITHUB_USERNAME}`)
         .setDescription(lines.join("\n"))
-        .setURL(`https://github.com/${username}`);
+        .setURL(`https://github.com/${GITHUB_USERNAME}`);
+
+      await interaction.editReply({ embeds: [embed] });
+    }
+
+    if (commandName === "github-top-repos") {
+      const limit = interaction.options.getInteger("limit") || 5;
+      await interaction.deferReply();
+      const repos = await getMyPublicRepos(100);
+      const ranked = [...repos]
+        .sort((a, b) => b.stargazers_count - a.stargazers_count)
+        .slice(0, Math.min(Math.max(limit, 1), 10));
+
+      if (ranked.length === 0) {
+        await interaction.editReply("No public repositories found.");
+        return;
+      }
+
+      const lines = ranked.map((repo, index) => {
+        return `${index + 1}. [${repo.name}](${repo.html_url}) - ⭐ ${repo.stargazers_count} | 🍴 ${repo.forks_count}`;
+      });
+
+      const embed = new EmbedBuilder()
+        .setColor(0x2da44e)
+        .setTitle(`${GITHUB_USERNAME} - Top Repositories`)
+        .setDescription(lines.join("\n"));
+
+      await interaction.editReply({ embeds: [embed] });
+    }
+
+    if (commandName === "github-languages") {
+      await interaction.deferReply();
+      const repos = await getMyPublicRepos(100);
+      const languageCount = new Map();
+
+      for (const repo of repos) {
+        const lang = repo.language || "Unknown";
+        languageCount.set(lang, (languageCount.get(lang) || 0) + 1);
+      }
+
+      const rankedLanguages = [...languageCount.entries()]
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10);
+
+      const lines = rankedLanguages.map(([language, count], idx) => {
+        return `${idx + 1}. ${language} - ${count} repo(s)`;
+      });
+
+      const embed = new EmbedBuilder()
+        .setColor(0xbf3989)
+        .setTitle(`${GITHUB_USERNAME} - Language Distribution`)
+        .setDescription(lines.join("\n") || "No languages found in public repos.");
 
       await interaction.editReply({ embeds: [embed] });
     }
