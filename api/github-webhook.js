@@ -1,5 +1,5 @@
-const crypto = require("crypto");
-const axios = require("axios");
+import crypto from "crypto";
+import axios from "axios";
 
 function safeJsonParse(input) {
   try {
@@ -80,7 +80,7 @@ function buildWebhookEmbed(event, payload) {
   };
 }
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).send("Method not allowed");
     return;
@@ -119,4 +119,4 @@ module.exports = async (req, res) => {
     const details = error.response?.data || error.message;
     res.status(500).json({ error: "Discord send failed", details });
   }
-};
+}

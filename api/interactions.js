@@ -1,5 +1,5 @@
-const axios = require("axios");
-const { verifyKey } = require("discord-interactions");
+import axios from "axios";
+import { verifyKey } from "discord-interactions";
 
 const githubApi = axios.create({
   baseURL: "https://api.github.com",
@@ -48,7 +48,7 @@ function interactionResponse(content) {
   };
 }
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).send("Method not allowed");
     return;
@@ -254,4 +254,4 @@ module.exports = async (req, res) => {
     const output = status ? `GitHub API Error (${status}): ${message}` : `Error: ${message}`;
     res.status(200).json(interactionResponse(output));
   }
-};
+}
