@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "rewrites": [
+    {
+      "source": "/interactions",
+      "destination": "/api/interactions"
+    },
+    {
+      "source": "/github-webhook",
+      "destination": "/api/github-webhook"
+    }
+  ]
+}

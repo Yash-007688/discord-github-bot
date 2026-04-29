@@ -44,7 +44,7 @@ B) npm run register
    Kaam: Discord slash commands register/update karta hai.
 
 C) npm start
-   Kaam: Bot + webhook server start karta hai.
+   Kaam: Local websocket bot + webhook server start karta hai (optional).
 
 Webhook Endpoint
 ================
@@ -52,3 +52,23 @@ Webhook Endpoint
 POST /github-webhook
 Kaam: GitHub events Discord channel me embed format me bhejta hai.
 Supports: push, pull_request, issues (+ generic fallback).
+
+Vercel Hosting (Full Mode)
+==========================
+
+1) Vercel me project import karo.
+2) Environment variables add karo:
+   - DISCORD_BOT_TOKEN
+   - DISCORD_PUBLIC_KEY
+   - DISCORD_CHANNEL_ID
+   - GITHUB_USERNAME
+   - GITHUB_TOKEN (recommended)
+   - GITHUB_WEBHOOK_SECRET (recommended)
+3) Discord Interactions Endpoint URL set karo:
+   - https://YOUR-VERCEL-DOMAIN/interactions
+4) GitHub webhook URL set karo:
+   - https://YOUR-VERCEL-DOMAIN/github-webhook
+
+Note:
+- Slash commands + webhook dono Vercel serverless endpoints se chalenge.
+- `npm run register` ek baar chalana zaruri hai after command changes.

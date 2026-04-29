@@ -29,8 +29,10 @@ Copy `.env.example` to `.env` and fill values:
 - `DISCORD_CLIENT_ID`: Application ID
 - `DISCORD_GUILD_ID`: Your Discord server (guild) ID
 - `DISCORD_CHANNEL_ID`: Channel ID where webhook updates will be sent
+- `DISCORD_PUBLIC_KEY`: Public key from Discord app (for interaction signature verify)
 - `GITHUB_TOKEN`: Optional but recommended for higher API limits
 - `GITHUB_USERNAME`: Your GitHub username (bot is restricted to this account)
+- `GITHUB_WEBHOOK_SECRET`: Optional but recommended to verify webhook signatures
 - `WEBHOOK_PORT`: Local webhook server port (default `3000`)
 
 ## 3) Register slash commands
@@ -39,35 +41,41 @@ Copy `.env.example` to `.env` and fill values:
 npm run register
 ```
 
-## 4) Run bot
+## 4) Vercel setup (slash commands + webhook)
+
+This project now supports Vercel serverless endpoints:
+
+- Discord interactions endpoint: `POST /interactions` (file: `api/interactions.js`)
+- GitHub webhook endpoint: `POST /github-webhook` (file: `api/github-webhook.js`)
+
+Steps:
+
+1. Import this repository into Vercel
+2. Add env vars in Vercel project settings:
+   - `DISCORD_BOT_TOKEN`
+   - `DISCORD_CHANNEL_ID`
+   - `DISCORD_PUBLIC_KEY`
+   - `GITHUB_TOKEN` (recommended)
+   - `GITHUB_USERNAME`
+   - `GITHUB_WEBHOOK_SECRET` (recommended)
+3. Deploy and copy your project URL
+4. In Discord Developer Portal:
+   - Open your application -> **General Information**
+   - Set **Interactions Endpoint URL** to:
+     - `https://YOUR-VERCEL-DOMAIN/interactions`
+5. In GitHub webhook settings, set payload URL:
+   - `https://YOUR-VERCEL-DOMAIN/github-webhook`
+6. If using webhook secret, set same value in GitHub settings
+
+## 5) Optional local gateway mode
+
+If you still want to run the classic websocket bot locally:
 
 ```bash
 npm start
 ```
 
-## 5) Connect GitHub webhook
-
-In your GitHub repository:
-
-1. Open **Settings -> Webhooks -> Add webhook**
-2. Set payload URL to:
-   - `http://YOUR_PUBLIC_HOST:3000/github-webhook`
-3. Content type: `application/json`
-4. Choose events:
-   - Pushes
-   - Pull requests
-   - Issues
-5. Save webhook
-
-If testing locally, expose port with tools like `ngrok`:
-
-```bash
-ngrok http 3000
-```
-
-Then use the generated public URL in GitHub webhook settings.
-
 ## Notes
 
 - Commands now return data only for the configured `GITHUB_USERNAME`.
-- For production, deploy on a stable host and protect webhook endpoint with a secret/signature check.
+- For production, always configure `DISCORD_PUBLIC_KEY` and `GITHUB_WEBHOOK_SECRET`.
