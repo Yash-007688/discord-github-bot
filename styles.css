@@ -1,0 +1,169 @@
+:root {
+  color-scheme: dark;
+  --bg: #0b1220;
+  --panel: #111a2b;
+  --border: #26334d;
+  --text: #e9eef9;
+  --muted: #a5b3cb;
+  --brand: #5ea1ff;
+  --ok: #35c885;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: var(--text);
+  background: radial-gradient(circle at top, #1b2a46 0%, #0b1220 50%, #070d17 100%);
+  min-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(7, 13, 23, 0.9);
+  position: sticky;
+  top: 0;
+}
+
+.brand {
+  font-weight: 700;
+}
+
+.nav-links {
+  display: flex;
+  gap: 12px;
+}
+
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+
+.nav-links a.active,
+.nav-links a:hover {
+  color: var(--text);
+  background: #1a2841;
+}
+
+.user-badge {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  color: var(--brand);
+  font-size: 13px;
+}
+
+.container {
+  width: min(1100px, 95%);
+  margin: 22px auto 32px;
+  display: grid;
+  gap: 14px;
+}
+
+.panel {
+  background: rgba(17, 26, 43, 0.95);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px;
+}
+
+.hero h1 {
+  margin: 0 0 8px;
+}
+
+.hero p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+}
+
+.metric h2 {
+  margin: 0;
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.metric p {
+  margin: 10px 0 0;
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--ok);
+}
+
+.list {
+  margin: 0;
+  padding-left: 18px;
+  color: var(--muted);
+}
+
+.list li {
+  margin: 8px 0;
+}
+
+.endpoints {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+code {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  background: #0f1729;
+  color: #9ad0ff;
+}
+
+.auth-wrap {
+  width: min(460px, 95%);
+  margin: 48px auto;
+}
+
+.auth-wrap h1 {
+  margin-top: 0;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+input,
+select {
+  background: #0e1627;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  background: var(--brand);
+  color: #071328;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}

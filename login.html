@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Discord Bot Dashboard</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">Discord GitHub Bot</div>
+      <nav class="nav-links">
+        <a href="/">Dashboard</a>
+        <a class="active" href="/login.html">Login</a>
+        <a href="/settings.html">Settings</a>
+      </nav>
+      <div id="userBadge" class="user-badge">Guest</div>
+    </header>
+
+    <main class="auth-wrap">
+      <section class="panel">
+        <h1>Sign In / Register</h1>
+        <p class="muted">Dashboard access ke liye basic profile save karein (demo local login).</p>
+        <form id="authForm">
+          <label class="field">
+            Username
+            <input id="username" type="text" placeholder="yourname" required />
+          </label>
+          <label class="field">
+            Email
+            <input id="email" type="email" placeholder="you@example.com" required />
+          </label>
+          <label class="field">
+            Password
+            <input id="password" type="password" placeholder="********" required />
+          </label>
+          <button type="submit">Continue</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

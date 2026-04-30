@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Settings - Discord Bot Dashboard</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">Discord GitHub Bot</div>
+      <nav class="nav-links">
+        <a href="/">Dashboard</a>
+        <a href="/login.html">Login</a>
+        <a class="active" href="/settings.html">Settings</a>
+      </nav>
+      <div id="userBadge" class="user-badge">Guest</div>
+    </header>
+
+    <main class="auth-wrap">
+      <section class="panel">
+        <h1>Dashboard Settings</h1>
+        <form id="settingsForm">
+          <label class="field">
+            Theme
+            <select id="theme">
+              <option value="dark">Dark</option>
+              <option value="system">System</option>
+            </select>
+          </label>
+          <label class="field">
+            Auto Refresh
+            <select id="refresh">
+              <option value="off">Off</option>
+              <option value="15">Every 15 sec</option>
+              <option value="30">Every 30 sec</option>
+              <option value="60">Every 60 sec</option>
+            </select>
+          </label>
+          <button type="submit">Save Settings</button>
+        </form>
+        <p id="settingsStatus" class="muted"></p>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

@@ -3,103 +3,64 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Discord GitHub Bot</title>
-    <style>
-      :root {
-        color-scheme: dark;
-      }
-      * {
-        box-sizing: border-box;
-      }
-      body {
-        margin: 0;
-        min-height: 100vh;
-        font-family: Arial, sans-serif;
-        background: radial-gradient(circle at top, #1f2a44 0%, #0d1117 50%, #070a0f 100%);
-        color: #e6edf3;
-        display: grid;
-        place-items: center;
-        padding: 24px;
-      }
-      .card {
-        width: min(760px, 100%);
-        background: rgba(22, 27, 34, 0.95);
-        border: 1px solid #30363d;
-        border-radius: 16px;
-        padding: 28px;
-      }
-      h1 {
-        margin: 0 0 8px;
-        font-size: 30px;
-      }
-      p {
-        margin: 0 0 14px;
-        color: #c9d1d9;
-        line-height: 1.5;
-      }
-      .badge {
-        display: inline-block;
-        margin-bottom: 18px;
-        padding: 6px 10px;
-        border-radius: 999px;
-        border: 1px solid #3b82f6;
-        color: #93c5fd;
-        font-size: 13px;
-      }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 12px;
-        margin-top: 18px;
-      }
-      .item {
-        border: 1px solid #30363d;
-        background: #11161f;
-        border-radius: 12px;
-        padding: 14px;
-      }
-      .item h2 {
-        margin: 0 0 6px;
-        font-size: 16px;
-      }
-      .item code {
-        display: inline-block;
-        margin-top: 6px;
-        color: #7ee787;
-      }
-      footer {
-        margin-top: 18px;
-        font-size: 13px;
-        color: #8b949e;
-      }
-    </style>
+    <title>Discord Bot Dashboard</title>
+    <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <main class="card">
-      <span class="badge">Live Service</span>
-      <h1>Discord GitHub Bot</h1>
-      <p>
-        This project provides Discord slash commands and GitHub webhook handling for analytics,
-        stats, and repository activity.
-      </p>
-      <p>
-        Use the endpoints below for integrations. This page is a quick status and reference view.
-      </p>
+    <header class="topbar">
+      <div class="brand">Discord GitHub Bot</div>
+      <nav class="nav-links">
+        <a class="active" href="/">Dashboard</a>
+        <a href="/login.html">Login</a>
+        <a href="/settings.html">Settings</a>
+      </nav>
+      <div id="userBadge" class="user-badge">Guest</div>
+    </header>
 
-      <section class="grid">
-        <article class="item">
-          <h2>Interactions Endpoint</h2>
-          <p>Receives Discord slash command interactions.</p>
-          <code>POST /interactions</code>
+    <main class="container">
+      <section class="panel hero">
+        <h1>Bot Control Dashboard</h1>
+        <p>
+          Yahan aapko Discord bot ka overview, command usage stats, contributors activity aur
+          endpoints ka quick access milega.
+        </p>
+      </section>
+
+      <section class="cards">
+        <article class="panel metric">
+          <h2>Total Commands</h2>
+          <p id="totalCommands">-</p>
         </article>
-        <article class="item">
-          <h2>GitHub Webhook Endpoint</h2>
-          <p>Receives GitHub webhook events securely.</p>
-          <code>POST /github-webhook</code>
+        <article class="panel metric">
+          <h2>Total Command Uses</h2>
+          <p id="totalUsage">-</p>
+        </article>
+        <article class="panel metric">
+          <h2>Contributors Tracked</h2>
+          <p id="totalContributors">-</p>
         </article>
       </section>
 
-      <footer>Powered by Node.js + Vercel</footer>
+      <section class="panel">
+        <h2>Top Commands</h2>
+        <ul id="topCommands" class="list"></ul>
+      </section>
+
+      <section class="panel">
+        <h2>Top Contributors</h2>
+        <ul id="topContributors" class="list"></ul>
+      </section>
+
+      <section class="panel">
+        <h2>Integration Endpoints</h2>
+        <div class="endpoints">
+          <code>POST /interactions</code>
+          <code>POST /github-webhook</code>
+          <code>GET /api/dashboard</code>
+        </div>
+      </section>
     </main>
+
+    <script src="/app.js"></script>
   </body>
 </html>
