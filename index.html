@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Discord GitHub Bot</title>
+    <style>
+      :root {
+        color-scheme: dark;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+        background: radial-gradient(circle at top, #1f2a44 0%, #0d1117 50%, #070a0f 100%);
+        color: #e6edf3;
+        display: grid;
+        place-items: center;
+        padding: 24px;
+      }
+      .card {
+        width: min(760px, 100%);
+        background: rgba(22, 27, 34, 0.95);
+        border: 1px solid #30363d;
+        border-radius: 16px;
+        padding: 28px;
+      }
+      h1 {
+        margin: 0 0 8px;
+        font-size: 30px;
+      }
+      p {
+        margin: 0 0 14px;
+        color: #c9d1d9;
+        line-height: 1.5;
+      }
+      .badge {
+        display: inline-block;
+        margin-bottom: 18px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid #3b82f6;
+        color: #93c5fd;
+        font-size: 13px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+      .item {
+        border: 1px solid #30363d;
+        background: #11161f;
+        border-radius: 12px;
+        padding: 14px;
+      }
+      .item h2 {
+        margin: 0 0 6px;
+        font-size: 16px;
+      }
+      .item code {
+        display: inline-block;
+        margin-top: 6px;
+        color: #7ee787;
+      }
+      footer {
+        margin-top: 18px;
+        font-size: 13px;
+        color: #8b949e;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="card">
+      <span class="badge">Live Service</span>
+      <h1>Discord GitHub Bot</h1>
+      <p>
+        This project provides Discord slash commands and GitHub webhook handling for analytics,
+        stats, and repository activity.
+      </p>
+      <p>
+        Use the endpoints below for integrations. This page is a quick status and reference view.
+      </p>
+
+      <section class="grid">
+        <article class="item">
+          <h2>Interactions Endpoint</h2>
+          <p>Receives Discord slash command interactions.</p>
+          <code>POST /interactions</code>
+        </article>
+        <article class="item">
+          <h2>GitHub Webhook Endpoint</h2>
+          <p>Receives GitHub webhook events securely.</p>
+          <code>POST /github-webhook</code>
+        </article>
+      </section>
+
+      <footer>Powered by Node.js + Vercel</footer>
+    </main>
+  </body>
+</html>
